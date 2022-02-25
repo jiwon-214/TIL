@@ -28,7 +28,7 @@
 "mislav"는 참여자 명단에는 두 명이 있지만, 완주자 명단에는 한 명밖에 없기 때문에 한명은 완주하지 못했습니다.   
 
 ### 문제 풀이   
-1. 배열 사용
+#### 1. 배열 사용
 ```java
 import java.util.Arrays;
 class Solution {
@@ -46,3 +46,34 @@ class Solution {
     }
 }
 ```
+이 문제에서 구해야 하는 것은 완주하지 못한 선수입니다.   
+즉, completion 배열에는 존재하지 않으면서 participant 배열에는 존재하는 선수입니다.   
+두 배열에서 일치하지 않는 요소가 완주하지 못한 선수이기 때문에,   
+participant, completion 배열을 각각 정렬한 후, 반복문을 통해서 두 배열을 비교한 후, completion 배열의 요소와 일치하지 않는 participant 배열의 요소를 반환해주면 됩니다.   
+반복문이 종료되었는데도 일치하지 않는 요소가 없었다면, participant 배열의 마지막 요소를 반환해줍니다.   
+
+#### 2. HashMap 사용
+```java
+import java.util.HashMap;
+class Solution {
+    public String solution(String[] participant, String[] completion) {
+        String answer = "";
+        HashMap<String, Integer> hm = new HashMap<>();
+        
+        for(String player : participant) hm.put(player, hm.getOrDefault(player, 0) + 1);
+        for(String player : completion) hm.put(player, hm.get(player) - 1);
+        
+        for (String key : hm.keySet()) {
+            if(hm.get(key) != 0) {
+                  answer = key;
+            }
+        }
+        return answer;
+   }
+}
+```
+---
+HashMap에 participant 배열 요소를 key 값으로 넣고, value는 1을 넣어줍니다.   
+동일한 HashMap에 completion 배열 요소를 key 값으로 넣으면서 HashMap hm에 key 값이 존재한다면 value에서 1을 빼줍니다.   
+이렇게 하면, 각 key 값의 value가 0이 아니라면 완주하지 못한 선수를 알 수 있습니다.   
+key 값의 집합을 가져와서 value 값을 확인한 후, value가 0이 아닌 완주하지 못한 선수를 반환해줍니다.
